@@ -1,38 +1,42 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import classNames from 'classnames';
+import {
+  HashRouter,
+  Navigate,
+  Route,
+  Routes,
+} from 'react-router-dom';
 
-export const Navbar: React.FC = () => {
-  const { pathname } = useLocation();
+import './App.scss';
 
-  return (
-    <nav
-      data-cy="nav"
-      className="navbar is-fixed-top has-shadow"
-      role="navigation"
-      aria-label="main navigation"
-    >
+import { Navbar } from './components/Navbar/Navbar';
+import { HomePage } from './pages/HomePage/HomePage';
+import { PeoplePage } from './pages/PeoplePage/PeoplePage';
+import { NotFoundPage } from './pages/NotFoundPage/NotFoundPage';
+
+export const App: React.FC = () => (
+  <HashRouter>
+    <Navbar />
+
+    <main className="section">
       <div className="container">
-        <div className="navbar-brand">
-          <Link
-            to="/"
-            className={classNames('navbar-item', {
-              'has-background-grey-lighter': pathname === '/',
-            })}
-          >
-            Home
-          </Link>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
 
-          <Link
-            to="/people"
-            className={classNames('navbar-item', {
-              'has-background-grey-lighter': pathname.startsWith('/people'),
-            })}
-          >
-            People
-          </Link>
-        </div>
+          <Route
+            path="/home"
+            element={<Navigate to="/" replace />}
+          />
+
+          <Route path="/people" element={<PeoplePage />} />
+
+          <Route
+            path="/people/:slug"
+            element={<PeoplePage />}
+          />
+
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
       </div>
-    </nav>
-  );
-};
+    </main>
+  </HashRouter>
+);
